@@ -1,37 +1,18 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-import "@ping-identity/pf-authn-js-widget";
+import {Options, PFWidget} from "@ping-identity/pf-authn-js-widget";
 
-interface Props {
-    divId?: string,
-    flowId?: string,
-    logo?: string,
-    deviceProfileScript?: string,
-    baseUrl: string
+interface Prop {
+    baseUrl: string,
+    divId?: string
 }
 
-const Widget = (props: Props) => {
+export const Widget = (props: Prop) => {
   useEffect(() => {
-    // creating the options object
-    let options: Authn.Options = { divId: "authnwidget" };
-    if (props.flowId)
-      options = { ...options, flowId: props.flowId };
-    if (props.logo)
-      options = { ...options, logo: props.logo };
-    // if (props.invokeReCaptcha)
-    //   options = { ...options, invokeReCaptcha: props.invokeReCaptcha };
-    // if (props.checkRecaptcha)
-    //   options = { ...options, checkRecaptcha: props.checkRecaptcha };
-    // if (props.grecaptcha)
-    //   options = { ...options, grecaptcha: options.grecaptcha };
-    if (props.deviceProfileScript)
-      options = { ...options, deviceProfileScript: options.deviceProfileScript };
+    let options: Options = { divId: "authnwidget" };
     console.log(options);
 
-    let authnWidget: Authn.Widget = new AuthnWidget (props.baseUrl, options);
-    // if (props.redirectlessConfig)
-    //   authnWidget.initRedirectless(props.redirectlessConfig);
-    // else
+    const authnWidget: PFWidget = new AuthnWidget(props.baseUrl, options);
     authnWidget.init();
   }, [])
   return (<div id="authnwidget" />);
@@ -47,5 +28,3 @@ Widget.propTypes = {
   deviceProfileScript: PropTypes.string,
   redirectlessConfig: PropTypes.object,
 }
-
-export default Widget;
