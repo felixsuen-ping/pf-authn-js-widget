@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Widget from './Widget';
+import {Widget} from './Widget';
 
 ReactDOM.render(
   <Widget baseUrl="https://localhost:9031" />,
