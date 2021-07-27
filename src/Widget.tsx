@@ -1,27 +1,26 @@
 import { useEffect } from "react";
 import PropTypes from "prop-types";
-import AuthnWidget, { IAuthnWidget } from "@ping-identity/pf-authn-js-widget";
-
-interface Props {
-  baseUrl: string,
-  flowId?: string,
-  logo?: string,
-  invokeReCaptcha?: any,
-  checkRecaptcha?: any,
-  grecaptcha?: any,
-  deviceProfileScript?: string,
-  redirectlessConfig?: any
-}
+import AuthnWidget, { RedirectlessConfig, IAuthnWidget } from "@ping-identity/pf-authn-js-widget";
 
 interface Options {
   divId: string,
   flowId?: string,
   logo?: string,
-  invokeReCaptcha?: any,
-  checkRecaptcha?: any,
-  grecaptcha?: any,
-  deviceProfileScript?: string,
-  redirectlessConfig?: any
+  invokeReCaptcha?: () => void,
+  checkRecaptcha?: () => void,
+  grecaptcha?: () => void,
+  deviceProfileScript?: string
+}
+
+interface Props {
+  flowId?: string,
+  logo?: string,
+  invokeReCaptcha?: () => void,
+  checkRecaptcha?: () => void,
+  grecaptcha?: () => void,
+  deviceProfileScript?: string
+  baseUrl: string,
+  redirectlessConfig?: RedirectlessConfig
 }
 
 export const Widget = (props: Props) => {
