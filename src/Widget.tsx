@@ -1,31 +1,22 @@
 import { useEffect } from "react";
 import PropTypes from "prop-types";
-import AuthnWidget, { RedirectlessConfig, IAuthnWidget } from "@ping-identity/pf-authn-js-widget";
-
-interface Options {
-  divId: string,
-  flowId?: string,
-  logo?: string,
-  invokeReCaptcha?: () => void,
-  checkRecaptcha?: () => void,
-  grecaptcha?: () => void,
-  deviceProfileScript?: string
-}
+import AuthnWidget, { IRedirectlessConfig, IOptions, IAuthnWidget } from "@ping-identity/pf-authn-js-widget";
 
 interface Props {
   flowId?: string,
   logo?: string,
   invokeReCaptcha?: () => void,
-  checkRecaptcha?: () => void,
-  grecaptcha?: () => void,
+  checkRecaptcha?: string,
+  grecaptcha?: any,
   deviceProfileScript?: string
   baseUrl: string,
-  redirectlessConfig?: RedirectlessConfig
+  redirectlessConfig?: IRedirectlessConfig,
 }
 
 export const Widget = (props: Props) => {
+
   useEffect(() => {
-    let options: Options = { divId: "authnwidget" };
+    let options: IOptions = { divId: "authnwidget" };
     if (props.flowId)
       options = { ...options, flowId: props.flowId };
     if (props.logo)
@@ -35,16 +26,18 @@ export const Widget = (props: Props) => {
     if (props.checkRecaptcha)
       options = { ...options, checkRecaptcha: props.checkRecaptcha };
     if (props.grecaptcha)
-      options = { ...options, grecaptcha: options.grecaptcha };
+      options = { ...options, grecaptcha: props.grecaptcha };
     if (props.deviceProfileScript)
-      options = { ...options, deviceProfileScript: options.deviceProfileScript };
+      options = { ...options, deviceProfileScript: props.deviceProfileScript };
     console.log(options);
 
-    const authnWidget: IAuthnWidget = new AuthnWidget(props.baseUrl, options);
+    var authnWidget: IAuthnWidget = new AuthnWidget(props.baseUrl, options);
+
     if (props.redirectlessConfig)
       authnWidget.initRedirectless(props.redirectlessConfig);
     else
       authnWidget.init();
+
   }, [])
   return (<div id="authnwidget" />);
 }
