@@ -13,7 +13,7 @@ const grecaptcha = window.grecaptcha;
 var authnWidget: IAuthnWidget;
 
 function checkRecaptcha(token: any) {
-    console.log('captcha response: ' + token);
+    alert('captcha response: ' + token);
     if (token.length === 0) {
         //reCaptcha not verified
         authnWidget.clearPendingState();
@@ -25,6 +25,7 @@ function checkRecaptcha(token: any) {
 
 function invokeReCaptcha() {
     let token = grecaptcha.getResponse();
+    console.log('token ' + token);
     if(token) {
         checkRecaptcha(token);
     }
