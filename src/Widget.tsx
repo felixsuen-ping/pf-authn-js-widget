@@ -9,6 +9,7 @@ interface Props {
   checkRecaptcha?: string,
   grecaptcha?: any,
   deviceProfileScript?: string
+  useActionParam?: boolean,
   baseUrl: string,
   redirectlessConfig?: IRedirectlessConfig,
 }
@@ -21,23 +22,33 @@ export const Widget = (props: Props) => {
       options = { ...options, flowId: props.flowId };
     if (props.logo)
       options = { ...options, logo: props.logo };
-    if (props.invokeReCaptcha)
-      options = { ...options, invokeReCaptcha: props.invokeReCaptcha };
-    if (props.checkRecaptcha)
-      options = { ...options, checkRecaptcha: props.checkRecaptcha };
-    if (props.grecaptcha)
-      options = { ...options, grecaptcha: props.grecaptcha };
+    // enable recaptcha
+    if (typeof (window as any).invokeReCaptcha !== 'undefined')
+      options = { ...options, invokeReCaptcha: (window as any).invokeReCaptcha, checkRecaptcha: "checkRecaptcha" };
+    if (typeof (window as any).grecaptcha !== 'undefined')
+      options = { ...options, grecaptcha: (window as any).grecaptcha };
+    if (props.useActionParam)
+      options = { ...options, useActionParam: true };
     if (props.deviceProfileScript)
       options = { ...options, deviceProfileScript: props.deviceProfileScript };
     console.log(options);
 
-    var authnWidget: IAuthnWidget = new AuthnWidget(props.baseUrl, options);
-
-    if (props.redirectlessConfig)
-      authnWidget.initRedirectless(props.redirectlessConfig);
-    else
-      authnWidget.init();
-
+    if (typeof (window as any).authnWidget !== undefined || (window as any).authWidget == null) {
+      // if authnWidget is already initialized globally
+      (window as any).authnWidget = new AuthnWidget(props.baseUrl, options);
+      if (props.redirectlessConfig)
+      (window as any).authnWidget.initRedirectless(props.redirectlessConfig);
+      else
+      (window as any).authnWidget.init();
+    } else {
+      // initialize authnWidget
+      var authnWidget: IAuthnWidget = new AuthnWidget(props.baseUrl, options);
+      if (props.redirectlessConfig)
+        authnWidget.initRedirectless(props.redirectlessConfig);
+      else
+        authnWidget.init();
+    }
+    
   }, [])
   return (<div id="authnwidget" />);
 }
@@ -49,6 +60,7 @@ Widget.propTypes = {
   invokeReCaptcha: PropTypes.func,
   checkRecaptcha: PropTypes.string,
   grecaptcha: PropTypes.object,
+  useActionParam: PropTypes.bool,
   deviceProfileScript: PropTypes.string,
   redirectlessConfig: PropTypes.object,
 }
